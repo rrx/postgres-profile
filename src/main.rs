@@ -1,11 +1,15 @@
 use tokio_postgres::{NoTls, Error};
-use std::time::{Duration, Instant};
+use std::time::Instant;
+use std::env;
+
 
 #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 async fn main() -> Result<(), Error> {
+    let args: Vec<String> = env::args().skip(1).collect();
+
     // Connect to the database.
     let (client, connection) =
-        tokio_postgres::connect("host=localhost dbname=test user=postgres password=example port=54320", NoTls).await?;
+        tokio_postgres::connect(&args.join(" "), NoTls).await?; //"host=localhost dbname=test user=postgres password=example port=54320", NoTls).await?;
 
     // The connection object performs the actual communication with the database,
     // so spawn it off to run on its own.
